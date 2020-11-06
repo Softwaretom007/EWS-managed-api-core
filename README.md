@@ -1,15 +1,30 @@
 # Quick introduction
 
-This is a NET Standard 1.4 port of EWS API. Here are some tips to take into account.
+This is a .NET 5 (RC) port of EWS API forked from https://github.com/sherlock1982/ews-managed-api
 
-- NET Framework version is as functional as original
-- Almost all functions involving HTTP requests are now async
-- Outdated async Begin/End functions were removed
-- NET Standard: LDAP Autodiscovery feature will not work
-- NET Standard on Linux: DNS Autodiscovery feature will not work
-- Nuget package can be found here: https://www.nuget.org/packages/Microsoft.Exchange.WebServices.NETStandard/
+- Added HttpClientFactory for HTTPClient (disposing causes timewait state on closed port - fatal for server application)
+- Remaked config to be static (one time init at startup) 
+- Autodiscover part isn't converted to "static" HTTPClient. I don't need that part. So feel free to modify.
+- Despite SetHandlerLifetime, HTTPClient is creating new connection after approx. 2 minutes of inactivity.
 
-# Getting Started with the EWS Managed API
+# Initialization:
+
+```
+In Startup.cs:
+ 
+var ewsConfig = new EWSStaticConfig(new Uri(exchangeUrl), new NetworkCredential(exchangeAccount, exchangePassword), TimeZoneInfo.Local, ExchangeVersion.Exchange2010_SP2);
+services.AddSingleton<IEWSStaticConfig>(ewsConfig);
+  
+services.AddHttpClient<IEWSHttpClient, EWSHttpClient>()
+        .ConfigurePrimaryHttpMessageHandler(c => c.GetService<IEWSStaticConfig>().GetInstance().GenerateSocketHandler())
+        .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+  
+services.AddSingleton<ExchangeService>();
+```
+
+
+# Getting Started:
+
 [![Gitter](https://badges.gitter.im/JoinChat.svg)](https://gitter.im/OfficeDev/ews-managed-api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 The Exchange Web Services (EWS) Managed API provides a managed interface for developing .NET client applications that use EWS.
@@ -19,9 +34,6 @@ By using the EWS Managed API, you can access almost all the information stored i
 
 Starting July 19th 2018, Exchange Web Services (EWS) will no longer receive feature updates. While the service will continue to receive security updates and certain non-security updates, product design and features will remain unchanged. This change also applies to the EWS SDKs for Java and .NET. More information here: https://developer.microsoft.com/en-us/graph/blogs/upcoming-changes-to-exchange-web-services-ews-api-for-office-365/
 
-## Download options
-
-Download EWS Managed API via [nuget](http://www.nuget.org/packages/Microsoft.Exchange.WebServices/).
 
 ## Getting started resources
 
