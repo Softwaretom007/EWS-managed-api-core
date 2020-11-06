@@ -4,7 +4,7 @@ This is a .NET 5 (RC) port of EWS API forked from https://github.com/sherlock198
 
 - Added HttpClientFactory for HTTPClient (disposing causes timewait state on closed port - fatal for server application)
 - Remaked config to be static (one time init at startup) 
-- Autodiscover part isn't converted to "static" HTTPClient. I don't need that part. So feel free to modify.
+- Autodiscover part isn't converted (without HTTPClientFactory). I don't need that part. So feel free to modify.
 - Despite SetHandlerLifetime, HTTPClient is creating new connection after approx. 2 minutes of inactivity.
 
 # Initialization:
