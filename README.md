@@ -52,9 +52,9 @@ In addition to the getting started links provided, you can find how to topics an
 ## Prerequisites
 
 You need the following to work with the EWS Managed API:
-- A C# compiler to build the DLL files. We recommend Visual Studio 2013.
+- A C# compiler to build the DLL files. We recommend Visual Studio 2019 Preview.
 - A mailbox on Office 365 or an Exchange server that is running Exchange Online or a version of Exchange starting with Exchange Server 2007.
-- A version of the .NET Framework starting with the .NET Framework 3.5.
+- A version of the .NET 5 SDK.
 
 ## Additional resources
 
